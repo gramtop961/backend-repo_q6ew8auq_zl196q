@@ -12,9 +12,9 @@ Model name is converted to lowercase for the collection name:
 """
 
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, List
 
-# Example schemas (replace with your own):
+# Example schemas (kept for reference):
 
 class User(BaseModel):
     """
@@ -38,11 +38,25 @@ class Product(BaseModel):
     category: str = Field(..., description="Product category")
     in_stock: bool = Field(True, description="Whether product is in stock")
 
-# Add your own schemas here:
-# --------------------------------------------------
+# AiDUC specific schemas
 
-# Note: The Flames database viewer will automatically:
-# 1. Read these schemas from GET /schema endpoint
-# 2. Use them for document validation when creating/editing
-# 3. Handle all database operations (CRUD) directly
-# 4. You don't need to create any database endpoints!
+class ForumPost(BaseModel):
+    """
+    EchoForum posts
+    Collection name: "forumpost" (lowercase of class name)
+    """
+    title: str = Field(..., description="Post title")
+    content: str = Field(..., description="Main message content")
+    author: str = Field(..., description="Display name or user id")
+    tags: Optional[List[str]] = Field(default_factory=list, description="Topic tags")
+
+    # Accessibility metadata
+    large_text: bool = Field(False, description="Render with larger typography")
+    has_audio: bool = Field(False, description="Audio/voice note available")
+    subtitles: bool = Field(False, description="Has captions/subtitles")
+
+    # Optional links to attachments
+    audio_url: Optional[str] = Field(None, description="URL to voice note if provided")
+    attachment_url: Optional[str] = Field(None, description="Optional attachment URL")
+
+# Add more schemas as needed for future features
